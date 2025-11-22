@@ -18,8 +18,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            overflow: hidden;
+            padding: 40px 20px;
+            overflow-x: hidden;
+            overflow-y: auto;
             position: relative;
         }
 
@@ -57,12 +58,13 @@
             padding: 50px 40px;
             border-radius: 30px;
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
             position: relative;
             z-index: 1;
             backdrop-filter: blur(10px);
             animation: slideIn 0.6s ease-out;
+            margin: 20px auto;
         }
 
         @keyframes slideIn {
@@ -233,6 +235,98 @@
             75% { transform: translateX(10px); }
         }
 
+        .stats {
+            margin-top: 30px;
+            display: none;
+            animation: fadeIn 0.5s ease-out 0.3s both;
+        }
+
+        .stats.show {
+            display: block;
+        }
+
+        .stat-title {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 15px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+
+        .stat-icon {
+            font-size: 2.5em;
+            margin-right: 20px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-label {
+            font-size: 0.95em;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.4em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .live-counter {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            color: white;
+            display: none;
+        }
+
+        .live-counter.show {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .live-counter-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .live-counter-value {
+            font-size: 2em;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 30px 25px;
@@ -244,6 +338,19 @@
 
             .result-value {
                 font-size: 1.5em;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-icon {
+                font-size: 2em;
+                min-width: 50px;
+            }
+
+            .stat-value {
+                font-size: 1.2em;
             }
         }
     </style>
@@ -286,18 +393,134 @@
                 <span class="result-label">Hours</span>
                 <span class="result-value" id="hours">0</span>
             </div>
+            <div class="result-item">
+                <span class="result-label">Minutes</span>
+                <span class="result-value" id="minutes">0</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Seconds</span>
+                <span class="result-value" id="seconds">0</span>
+            </div>
+        </div>
+
+        <div class="live-counter" id="liveCounter">
+            <div class="live-counter-title">⏱️ Live Age Counter</div>
+            <div class="live-counter-value" id="liveSeconds">0</div>
+            <div style="font-size: 0.9em; margin-top: 5px;">seconds old</div>
+        </div>
+
+        <div class="stats" id="stats">
+            <div class="stat-title">🎯 Fun Stats About You</div>
+            <div class="stat-card">
+                <div class="stat-icon">🌍</div>
+                <div class="stat-content">
+                    <div class="stat-label">Earth Rotations</div>
+                    <div class="stat-value" id="rotations">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💓</div>
+                <div class="stat-content">
+                    <div class="stat-label">Heartbeats (approx)</div>
+                    <div class="stat-value" id="heartbeats">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">😴</div>
+                <div class="stat-content">
+                    <div class="stat-label">Hours Slept (approx)</div>
+                    <div class="stat-value" id="sleepHours">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🍕</div>
+                <div class="stat-content">
+                    <div class="stat-label">Meals Eaten (approx)</div>
+                    <div class="stat-value" id="meals">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎂</div>
+                <div class="stat-content">
+                    <div class="stat-label">Next Birthday</div>
+                    <div class="stat-value" id="nextBirthday">-</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-content">
+                    <div class="stat-label">Day of Week Born</div>
+                    <div class="stat-value" id="dayBorn">-</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-content">
+                    <div class="stat-label">Zodiac Sign</div>
+                    <div class="stat-value" id="zodiac">-</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🌙</div>
+                <div class="stat-content">
+                    <div class="stat-label">Moon Cycles Witnessed</div>
+                    <div class="stat-value" id="moonCycles">0</div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        let liveUpdateInterval;
+        let birthDateTime;
+
+        function getZodiacSign(month, day) {
+            const signs = [
+                {name: 'Capricorn ♑', end: [1, 19]},
+                {name: 'Aquarius ♒', end: [2, 18]},
+                {name: 'Pisces ♓', end: [3, 20]},
+                {name: 'Aries ♈', end: [4, 19]},
+                {name: 'Taurus ♉', end: [5, 20]},
+                {name: 'Gemini ♊', end: [6, 20]},
+                {name: 'Cancer ♋', end: [7, 22]},
+                {name: 'Leo ♌', end: [8, 22]},
+                {name: 'Virgo ♍', end: [9, 22]},
+                {name: 'Libra ♎', end: [10, 22]},
+                {name: 'Scorpio ♏', end: [11, 21]},
+                {name: 'Sagittarius ♐', end: [12, 21]},
+                {name: 'Capricorn ♑', end: [12, 31]}
+            ];
+
+            for (let sign of signs) {
+                if (month < sign.end[0] || (month === sign.end[0] && day <= sign.end[1])) {
+                    return sign.name;
+                }
+            }
+        }
+
+        function updateLiveCounter() {
+            if (!birthDateTime) return;
+            
+            const now = new Date();
+            const totalSeconds = Math.floor((now - birthDateTime) / 1000);
+            document.getElementById('liveSeconds').textContent = totalSeconds.toLocaleString();
+        }
+
         function calculateAge() {
             const birthdate = document.getElementById('birthdate').value;
             const error = document.getElementById('error');
             const results = document.getElementById('results');
+            const stats = document.getElementById('stats');
+            const liveCounter = document.getElementById('liveCounter');
 
             if (!birthdate) {
                 error.classList.add('show');
                 results.classList.remove('show');
+                stats.classList.remove('show');
+                liveCounter.classList.remove('show');
+                if (liveUpdateInterval) {
+                    clearInterval(liveUpdateInterval);
+                }
                 return;
             }
 
@@ -308,10 +531,16 @@
                 error.textContent = 'Birthdate cannot be in the future!';
                 error.classList.add('show');
                 results.classList.remove('show');
+                stats.classList.remove('show');
+                liveCounter.classList.remove('show');
+                if (liveUpdateInterval) {
+                    clearInterval(liveUpdateInterval);
+                }
                 return;
             }
 
             error.classList.remove('show');
+            birthDateTime = birth;
 
             let years = today.getFullYear() - birth.getFullYear();
             let months = today.getMonth() - birth.getMonth();
@@ -330,14 +559,59 @@
 
             const totalDays = Math.floor((today - birth) / (1000 * 60 * 60 * 24));
             const hours = totalDays * 24;
+            const minutes = hours * 60;
+            const seconds = minutes * 60;
 
             document.getElementById('years').textContent = years;
             document.getElementById('months').textContent = months;
             document.getElementById('days').textContent = days;
             document.getElementById('totalDays').textContent = totalDays.toLocaleString();
             document.getElementById('hours').textContent = hours.toLocaleString();
+            document.getElementById('minutes').textContent = minutes.toLocaleString();
+            document.getElementById('seconds').textContent = seconds.toLocaleString();
+
+            // Calculate fun stats
+            document.getElementById('rotations').textContent = totalDays.toLocaleString();
+            
+            const avgHeartRate = 70;
+            const heartbeats = Math.floor(minutes * avgHeartRate);
+            document.getElementById('heartbeats').textContent = heartbeats.toLocaleString();
+
+            const sleepHours = Math.floor((totalDays * 8));
+            document.getElementById('sleepHours').textContent = sleepHours.toLocaleString();
+
+            const meals = totalDays * 3;
+            document.getElementById('meals').textContent = meals.toLocaleString();
+
+            const moonCycles = Math.floor(totalDays / 29.5);
+            document.getElementById('moonCycles').textContent = moonCycles.toLocaleString();
+
+            // Next birthday
+            let nextBirthday = new Date(today.getFullYear(), birth.getMonth(), birth.getDate());
+            if (nextBirthday < today) {
+                nextBirthday.setFullYear(today.getFullYear() + 1);
+            }
+            const daysUntilBirthday = Math.ceil((nextBirthday - today) / (1000 * 60 * 60 * 24));
+            document.getElementById('nextBirthday').textContent = `${daysUntilBirthday} days`;
+
+            // Day of week born
+            const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            document.getElementById('dayBorn').textContent = daysOfWeek[birth.getDay()];
+
+            // Zodiac sign
+            const zodiac = getZodiacSign(birth.getMonth() + 1, birth.getDate());
+            document.getElementById('zodiac').textContent = zodiac;
 
             results.classList.add('show');
+            stats.classList.add('show');
+            liveCounter.classList.add('show');
+
+            // Start live counter
+            if (liveUpdateInterval) {
+                clearInterval(liveUpdateInterval);
+            }
+            updateLiveCounter();
+            liveUpdateInterval = setInterval(updateLiveCounter, 1000);
         }
 
         document.getElementById('birthdate').addEventListener('keypress', function(e) {
