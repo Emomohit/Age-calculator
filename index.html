@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A beautiful and interactive Age Calculator built by Mohit.">
     <title>EMo's Age Calculator</title>
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --text-gradient: linear-gradient(135deg, #667eea, #764ba2);
+            --bg-color: #f8f9fa;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,34 +21,35 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: var(--primary-gradient);
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
         }
 
-        body::before {
+        body::before, body::after {
             content: '';
             position: absolute;
-            width: 500px;
-            height: 500px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
+            z-index: 0;
+        }
+
+        body::before {
+            width: 500px;
+            height: 500px;
             top: -250px;
             left: -250px;
             animation: float 20s infinite ease-in-out;
         }
 
         body::after {
-            content: '';
-            position: absolute;
             width: 400px;
             height: 400px;
             background: rgba(255, 255, 255, 0.08);
-            border-radius: 50%;
             bottom: -200px;
             right: -200px;
             animation: float 15s infinite ease-in-out reverse;
@@ -66,24 +74,18 @@
         }
 
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .header {
+        header {
             text-align: center;
             margin-bottom: 40px;
         }
 
         .title {
             font-size: 2.5em;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: var(--text-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -96,6 +98,12 @@
             color: #666;
             font-size: 1em;
             font-weight: 400;
+        }
+
+        .author {
+            margin-top: 5px; 
+            font-size: 0.9em; 
+            color: #999;
         }
 
         .input-group {
@@ -118,7 +126,7 @@
             font-size: 1.1em;
             transition: all 0.3s ease;
             outline: none;
-            background: #f8f9fa;
+            background: var(--bg-color);
         }
 
         input[type="date"]:focus {
@@ -131,7 +139,7 @@
         .btn {
             width: 100%;
             padding: 18px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: var(--text-gradient);
             color: white;
             border: none;
             border-radius: 15px;
@@ -164,14 +172,8 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         .results.show {
@@ -264,38 +266,30 @@
         }
 
         @media (max-width: 600px) {
-            .container {
-                padding: 30px 25px;
-            }
-
-            .title {
-                font-size: 2em;
-            }
-
-            .result-value {
-                font-size: 1.5em;
-            }
+            .container { padding: 30px 25px; }
+            .title { font-size: 2em; }
+            .result-value { font-size: 1.5em; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
+    <main class="container">
+        <header>
             <h1 class="title">EMo's Calculator</h1>
             <p class="subtitle">Discover Your Age in Style ✨</p>
-            <p class="subtitle" style="margin-top: 5px; font-size: 0.9em; color: #999;">Built by Mohit Ahirwar</p>
-        </div>
+            <p class="author">Built by Mohit</p>
+        </header>
 
-        <div class="input-group">
+        <section class="input-group">
             <label for="birthdate">Enter Your Birthdate</label>
-            <input type="date" id="birthdate" required>
-        </div>
+            <input type="date" id="birthdate" required aria-label="Birthdate input">
+        </section>
 
-        <button class="btn" onclick="calculateAge()">Calculate My Age</button>
+        <button class="btn" id="calcBtn">Calculate My Age</button>
 
-        <p class="error" id="error">Please select a valid date!</p>
+        <p class="error" id="error" role="alert">Please select a valid date!</p>
 
-        <div class="results" id="results">
+        <section class="results" id="results" aria-live="polite">
             <div class="emoji">🎂</div>
             <div class="result-item">
                 <span class="result-label">Years</span>
@@ -325,23 +319,25 @@
                 <span class="result-label">Seconds</span>
                 <span class="result-value" id="seconds">0</span>
             </div>
-        </div>
+        </section>
 
-        <div class="advice" id="advice">
+        <section class="advice" id="advice">
             <h3 class="advice-title">💡 Success Advice for Your Age</h3>
             <p class="advice-text" id="adviceText"></p>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <script>
         function calculateAge() {
             const birthdate = document.getElementById('birthdate').value;
             const error = document.getElementById('error');
             const results = document.getElementById('results');
+            const adviceSection = document.getElementById('advice');
 
             if (!birthdate) {
                 error.classList.add('show');
                 results.classList.remove('show');
+                adviceSection.classList.remove('show');
                 return;
             }
 
@@ -352,6 +348,7 @@
                 error.textContent = 'Birthdate cannot be in the future!';
                 error.classList.add('show');
                 results.classList.remove('show');
+                adviceSection.classList.remove('show');
                 return;
             }
 
@@ -388,7 +385,6 @@
             results.classList.add('show');
 
             // Success advice based on age
-            const adviceSection = document.getElementById('advice');
             const adviceText = document.getElementById('adviceText');
             let advice = '';
 
@@ -413,6 +409,8 @@
             adviceText.textContent = advice;
             adviceSection.classList.add('show');
         }
+
+        document.getElementById('calcBtn').addEventListener('click', calculateAge);
 
         document.getElementById('birthdate').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
