@@ -307,6 +307,10 @@
                 <span class="result-label">Total Days Lived</span>
                 <span class="result-value" id="totalDays">0</span>
             </div>
+            <div class="result-item" style="background: rgba(102,126,234,0.1);">
+                <span class="result-label">Zodiac Sign</span>
+                <span class="result-value" id="zodiac" style="font-size: 1.2em; color: #667eea;">✨</span>
+            </div>
             <div class="result-item">
                 <span class="result-label">Hours</span>
                 <span class="result-value" id="hours">0</span>
@@ -398,6 +402,25 @@
             const diffTime = Math.abs(nextBday - today);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             document.getElementById('nextBirthday').textContent = `In ${diffDays} days 🎈`;
+
+            
+            // Zodiac Sign Logic
+            const m = birth.getMonth() + 1;
+            const d = birth.getDate();
+            let sign = "";
+            if ((m == 3 && d >= 21) || (m == 4 && d <= 19)) sign = "Aries ♈";
+            else if ((m == 4 && d >= 20) || (m == 5 && d <= 20)) sign = "Taurus ♉";
+            else if ((m == 5 && d >= 21) || (m == 6 && d <= 20)) sign = "Gemini ♊";
+            else if ((m == 6 && d >= 21) || (m == 7 && d <= 22)) sign = "Cancer ♋";
+            else if ((m == 7 && d >= 23) || (m == 8 && d <= 22)) sign = "Leo ♌";
+            else if ((m == 8 && d >= 23) || (m == 9 && d <= 22)) sign = "Virgo ♍";
+            else if ((m == 9 && d >= 23) || (m == 10 && d <= 22)) sign = "Libra ♎";
+            else if ((m == 10 && d >= 23) || (m == 11 && d <= 21)) sign = "Scorpio ♏";
+            else if ((m == 11 && d >= 22) || (m == 12 && d <= 21)) sign = "Sagittarius ♐";
+            else if ((m == 12 && d >= 22) || (m == 1 && d <= 19)) sign = "Capricorn ♑";
+            else if ((m == 1 && d >= 20) || (m == 2 && d <= 18)) sign = "Aquarius ♒";
+            else sign = "Pisces ♓";
+            document.getElementById('zodiac').textContent = sign;
 
             const adviceText = document.getElementById('adviceText');
             let advice = '';
